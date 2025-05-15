@@ -5,7 +5,7 @@ import "fmt"
 func main(){
 	var choice int
 
-	// clearConsole()
+	clearConsole()
 	
 	for {
 		fmt.Println("=========================================================")
@@ -29,13 +29,13 @@ func main(){
 
 		switch choice {
 		case 1:
-			// AddData()
+			// addData()
 		case 2:
 			// updateData()
 		case 3:
 			// deleteData()
 		case 4:
-			// ShowAllData()
+			// showAllData()
 		case 5:
 			// searchData()
 		case 6:
