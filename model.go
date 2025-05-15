@@ -7,7 +7,6 @@ type assessment struct {
 	date time.Time
 	userID string
 	userName string
-	questions []question
 	answers []answer
 	totalScore int
 	category string
