@@ -1,15 +1,15 @@
 package main
 
-// fungsi untuk menambahkan data
+// fungsi untuk menambahkan assessment
 
-// fungsi untuk mengubah data
+// fungsi untuk mengubah assessment
 
-// fungsi untuk menghapus data
+// fungsi untuk menghapus assessment
 
-// fungsi untuk menampilkan data
+// fungsi untuk menampilkan assessment
 
-// fungsi untuk mencari data
+// fungsi untuk mencari assessment
 
-// fungsi untuk mengurutkan data
+// fungsi untuk mengurutkan assessment
 
 // fungsi untuk menampilkan laporan
