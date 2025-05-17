@@ -1,54 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func main(){
-	var choice int
+	if len(os.Args) < 2 {
+		fmt.Println("Contoh Penggunaan: go run main.go [cli/gui]")
+		return
+	}
 
-	clearConsole()
-	
-	for {
-		fmt.Println("=========================================================")
-		fmt.Println("               SELAMAT DATANG di makSehat")            
-		fmt.Println("  Aplikasi Manajemen Kesehatan Mental - Self Assessment")
-		fmt.Println("=========================================================")
-		fmt.Println()
-		fmt.Println("1. Tambah Data Assessment")
-		fmt.Println("2. Ubah Data Assessment")
-		fmt.Println("3. Hapus Data Assessment")
-		fmt.Println("4. Tampilkan Data Assessment")
-		fmt.Println("5. Cari Data Assessment")
-		fmt.Println("6. Urutkan Data Assessment")
-		fmt.Println("7. Laporan Ringkasan")
-		fmt.Println("8. Keluar")
-		fmt.Println()
-		fmt.Println("---------------------------------------------------------")
-		fmt.Print("Pilih menu [1-8]: ")
+	mode := os.Args[1]
 
-		fmt.Scan(&choice)
-
-		switch choice {
-		case 1:
-			// addData()
-		case 2:
-			// updateData()
-		case 3:
-			// deleteData()
-		case 4:
-			// showAllData()
-		case 5:
-			// searchData()
-		case 6:
-			// sortData()
-		case 7:
-			// showReport()
-		case 8:
-			fmt.Println()
-			println("Program selesai, semua data yang belum disimpan telah dihapus.")
-			fmt.Println()
-			return
-		default:
-			fmt.Println("Pilihan tidak valid, coba lagi.")
-		}
+	switch mode {
+	case "cli":
+		cliMode()
+	case "gui":
+		guiMode()
+	default:
+		fmt.Println("Perintah tidak dikenali:", mode)
+		fmt.Println("Contoh Penggunaan: go run main.go cli (untuk masuk ke mode CLI)")
 	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"os"
 	"os/exec"
 	"runtime"
@@ -19,10 +20,10 @@ func clearConsole(){
 }
 
 // fungsi untk membaca enter
-
-// fungsi untuk menerima input string
-
-// fungsi untuk menerima input integer
+func pressEnter() {
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
+}
 
 // fungsi konversi ke lowercase
 
