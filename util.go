@@ -1,10 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // fungsi konversi ke lowercase
@@ -15,6 +17,50 @@ func toLowerCase(text string) string {
 // fungsi konversi ke uppercase
 func toUpperCase(text string) string {
 	return strings.ToUpper(text)
+}
+
+// fungsi validasi input string
+func stringInputValidation(input string) bool {
+	if input[0] == ' ' || input[len(input) - 1] == ' ' {
+		return false
+	}
+
+	prevSpace := false
+	for _, char := range input {
+		if char == ' ' {
+			if prevSpace {
+				return false
+			}
+			prevSpace = true
+		} else {
+			if !unicode.IsLetter(char) {
+				return false
+			}
+			prevSpace = false
+		}
+	}
+	return true
+}
+
+// fungsi validasi input integer
+func intInputValidation(input string) bool {
+	for _, num := range input {
+		if !unicode.IsNumber(num) {
+			return false
+		}
+	}
+	return true
+}
+
+// fungsi validasi nama
+func nameInputValidation(input string) error {
+	if len(input) == 0 {
+		return errors.New("nama tidak boleh kosong")
+	}
+	if !stringInputValidation(input) {
+		return errors.New("nama harus huruf dan tidak memiliki spasi ganda")
+	}
+	return nil
 }
 
 // fungsi generate ID assessment (sementara)
