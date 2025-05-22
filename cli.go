@@ -52,8 +52,13 @@ func cliMode() {
 // fungsi handler addAssessment
 func handleAddAssessment() {
 	var (
+		answers []answer
+		err error
 		isNewUser string
+		inquiry string
 		name string
+		userID string
+		questions []question
 	)
 
 	clearConsole()
@@ -61,7 +66,7 @@ func handleAddAssessment() {
 
 	for {
 		fmt.Print("- Apakah Anda adalah pengguna baru? (y/n): ")
-		isNewUser = stringInput()
+		isNewUser = toLowerCase(stringInput())
 		err := yesNoValidation(isNewUser)
 
 		if err != nil {
@@ -79,7 +84,7 @@ func handleAddAssessment() {
 	for {
 		fmt.Print("- Masukkan nama lengkap Anda: ")
 		name = stringInput()
-		err := nameInputValidation(name)
+		err = nameInputValidation(name)
 
 		if err != nil {
 			fmt.Println()
@@ -88,13 +93,71 @@ func handleAddAssessment() {
 			continue
 		}
 
+		if isNewUser == "y" {
+			userID = generateUserID()
+		} else {
+			uname := toUpperCase(name)
+			userID, err = getUserID(uname)
+			if err != nil {
+				fmt.Println()
+				fmt.Println("  Error:", err)
+				fmt.Println()
+				continue
+			}
+		}
+
 		break
 	}
 
 	fmt.Println()
 	pressEnter()
+	clearConsole()
+	showQuestionnaire()
+	fmt.Println()
 
-	// lanjutkan sampai pemanggilan fungsi addassessment
+	for i := 0; i < 10; i++ {
+		id := getQuestionsID()
+		inquiry, err = getQuestionsText(id)
+		if err != nil {
+			fmt.Println("Err:", err)
+		} else {
+			fmt.Printf("%d. %s", i + 1, inquiry)
+		}
+		fmt.Println()
+		for {
+			fmt.Print("   Jawabanmu: ")
+			input := intInput()
+			if input < 1 || input > 5 {
+				fmt.Println("   Err: Jawaban harus diantara 1-5!")
+				continue
+			}
+			cek := strconv.Itoa(input)
+			err := intInputValidation(cek)
+			if err != nil {
+				fmt.Println("   Err:", err)
+				continue
+			}
+			answers = append(answers, answer{
+				questionID: id,
+				answer: input,
+			})
+			break
+		}
+		questions = append(questions, question{
+			questionID: id,
+			questionText: inquiry,
+		})
+		fmt.Println()
+	}
+
+	addAssessment(name, userID, questions, answers)
+
+	resetSelectedQuestion()
+	fmt.Println("---------------------------------------------------------------------------")
+	fmt.Println()
+	fmt.Println("Jawaban berhasil disimpan!")
+	fmt.Println()
+	pressEnter()
 }
 
 // fungsi handler updateAssessment
@@ -111,6 +174,22 @@ func handleAddAssessment() {
 
 // fungi untuk menampilkan daftar menu
 func showMenu() {
+	for _, a := range assessments{
+		fmt.Println(a.assessmentID)
+		fmt.Println(a.date.Format("02-01-2006"))
+		fmt.Println(a.userID)
+		fmt.Println(a.userName)
+		for _, q := range a.questions {
+			fmt.Print(q.questionID, ", ")
+		}
+		fmt.Println()
+		for _, w := range a.answers {
+			fmt.Print(w.answer, ", ")
+		}
+		fmt.Println()
+		fmt.Println(a.totalScore)
+		fmt.Println(a.category)
+	}
 	fmt.Println("=========================================================")
 	fmt.Println("               SELAMAT DATANG di makSehat")            
 	fmt.Println("  Aplikasi Manajemen Kesehatan Mental - Self Assessment")
@@ -137,6 +216,31 @@ func showVerificationHeader() {
 	fmt.Println()
 	fmt.Println("Silakan verifikasi diri Anda sebelum mengisi kuesioner.")
 	fmt.Println()
+}
+
+// fungsi untuk menampilkan header kuesioner
+func showQuestionnaire() {
+	fmt.Println("===========================================================================")
+	fmt.Println("                    KUESIONER KESEHATAN MENTAL makSehat")
+	fmt.Println("===========================================================================")
+	fmt.Println()
+	fmt.Println("Petunjuk pengisian kuesioner:")
+	fmt.Println()
+	fmt.Println("Anda akan diminta untuk menjawab 10 pertanyaan")
+	fmt.Println("menggunakan skala Likert 1-5 dengan ketentuan sebagai berikut:")
+	fmt.Println()
+	fmt.Println("1 = Tidak Pernah")
+	fmt.Println("2 = Jarang")
+	fmt.Println("3 = Kadang-kadang")
+	fmt.Println("4 = Sering")
+	fmt.Println("5 = Selalu")
+	fmt.Println()
+	fmt.Println("Contoh penggunaan skala:")
+	fmt.Println()
+	fmt.Println("Seberapa sering Anda merasa cemas akhir-akhir ini?")
+	fmt.Println("Jawaban : 5")
+	fmt.Println()
+	fmt.Println("---------------------------------------------------------------------------")
 }
 
 // fungsi untuk membersihkan terminal

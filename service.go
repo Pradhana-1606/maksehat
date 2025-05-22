@@ -1,15 +1,46 @@
 package main
 
-// fungsi untuk menambahkan assessment
+import "time"
 
-// fungsi untuk mengubah assessment
+// menambahkan assessment
+func addAssessment(name, userID string, questions []question, answers []answer) {
+	var (
+		assessmentID string
+		category string
+		date time.Time
+		newAssessment assessment
+		userName string
+		totalScore int
+	)
 
-// fungsi untuk menghapus assessment
+	totalScore = scoreCalculation(answers)
+	date = generateDate()
+	assessmentID = generateAssessmentID(date, totalScore)
+	userName = toUpperCase(name)
+	category = categorization(totalScore)
 
-// fungsi untuk menampilkan assessment
+	newAssessment = assessment{
+		assessmentID: assessmentID,
+		date: date,
+		userID: userID,
+		userName: userName,
+		questions: questions,
+		answers: answers,
+		totalScore: totalScore,
+		category: category,
+	}
 
-// fungsi untuk mencari assessment
+	assessments = append(assessments, newAssessment)
+}
 
-// fungsi untuk mengurutkan assessment
+// mengubah assessment
 
-// fungsi untuk menampilkan laporan
+// menghapus assessment
+
+// menampilkan assessment
+
+// mencari assessment
+
+// mengurutkan assessment
+
+// menampilkan laporan
