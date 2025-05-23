@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"maksehat/cli"
+	"maksehat/gui"
 	"math/rand"
 	"os"
 	"time"
 )
 
 func main(){
-	// seed random agar bisa menghasilkan angka acak setiap kali digunakan
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	if len(os.Args) < 2 {
@@ -20,9 +21,9 @@ func main(){
 
 	switch mode {
 	case "cli":
-		cliMode()
+		cli.CliMode()
 	case "gui":
-		guiMode()
+		gui.GuiMode()
 	default:
 		fmt.Println("Perintah tidak dikenali:", mode)
 		fmt.Println("Contoh Penggunaan: go run main.go . cli (untuk masuk ke mode CLI)")
