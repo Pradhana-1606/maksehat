@@ -1,3 +1,3 @@
-module mak-sehat
+module maksehat
 
 go 1.23.1
