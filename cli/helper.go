@@ -99,10 +99,13 @@ func stringInput() string {
 	return input
 }
 
-func intInput() int {
+func intInput() (int, error) {
 	source := stringInput()
-	input, _ := strconv.Atoi(source)
-	return input
+	input, err := strconv.Atoi(source)
+	if err != nil {
+		return 0, errors.New("harus angka")
+	}
+	return input, nil
 }
 
 func yesNoValidation(input string) error {

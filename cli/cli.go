@@ -6,7 +6,6 @@ import (
 	"maksehat/internal/model"
 	"maksehat/internal/service"
 	"maksehat/internal/util"
-	"strconv"
 )
 
 func CliMode() {
@@ -15,7 +14,7 @@ func CliMode() {
 
 		showMenu()
 
-		choice := intInput()
+		choice, _ := intInput()
 
 		switch choice {
 		case 1:
@@ -77,6 +76,7 @@ func handleAddAssessment() {
 
 	fmt.Println()
 
+	failCount := 0
 	for {
 		fmt.Print("- Masukkan nama lengkap Anda: ")
 		name = stringInput()
@@ -98,6 +98,15 @@ func handleAddAssessment() {
 				fmt.Println()
 				fmt.Println("  Error:", err)
 				fmt.Println()
+				failCount += 1
+				if failCount > 2 {
+					clearConsole()
+					fmt.Println()
+					fmt.Println("Yuh koh kelalen jenenge dewek wkwkwk")
+					fmt.Println()
+					pressEnter()
+					return
+				}
 				continue
 			}
 		}
@@ -112,22 +121,32 @@ func handleAddAssessment() {
 	fmt.Println()
 
 	for i := 0; i < 10; i++ {
-		util.GetQuestion()
+		util.GetQuestion(10)
 		questionID = data.SelectedQuestions[i].QuestionID
 		question = data.SelectedQuestions[i].QuestionText
 		fmt.Printf("%d. %s", i + 1, question)
 		fmt.Println()
 		for {
-			fmt.Print("   Jawabanmu: ")
-			input := intInput()
-			if input < 1 || input > 5 {
-				fmt.Println("   Err: Jawaban harus diantara 1-5!")
+			if i < 9 {
+				fmt.Print("   Jawabanmu: ")
+			} else {
+				fmt.Print("    Jawabanmu: ")
+			}
+			input, err := intInput()
+			if err != nil {
+				if i < 9 {
+					fmt.Println("   Error: Jawaban", err)
+				} else {
+					fmt.Println("    Error: Jawaban", err)
+				}
 				continue
 			}
-			cek := strconv.Itoa(input)
-			err := util.IntInputValidation(cek)
-			if err != nil {
-				fmt.Println("   Err: Jawaban", err)
+			if input < 1 || input > 5 {
+				if i < 9 {
+					fmt.Println("   Error: Jawaban harus diantara 1-5!")
+				} else {
+					fmt.Println("    Error: Jawaban harus diantara 1-5!")
+				}
 				continue
 			}
 			answers = append(answers, model.Answer{

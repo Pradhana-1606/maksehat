@@ -133,8 +133,8 @@ func GenerateDate() time.Time {
 	return Date
 }
 
-func GetQuestion() {
-	for {
+func GetQuestion(n int) {
+	for len(data.SelectedQuestions) < n{
 		i := rand.Intn(len(data.QuestionBank))
 		id := data.QuestionBank[i].QuestionID
 		text := data.QuestionBank[i].QuestionText
