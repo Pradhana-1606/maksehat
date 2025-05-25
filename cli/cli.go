@@ -9,13 +9,25 @@ import (
 )
 
 func CliMode() {
+	clearConsole()
+	err := data.IsDBExist("data/assessment.json")
+	if err != nil {
+		fmt.Println()
+		fmt.Println(err)
+		fmt.Println()
+		pressEnter()
+	}
+	err = service.LoadFromDatabase()
+	if err != nil {
+		fmt.Println()
+		fmt.Println(err)
+		fmt.Println()
+		pressEnter()
+	}
 	for {
 		clearConsole()
-
 		showMenu()
-
 		choice, _ := intInput()
-
 		switch choice {
 		case 1:
 			handleAddAssessment()
@@ -32,6 +44,19 @@ func CliMode() {
 		case 7:
 			// handleShowReport()
 		case 8:
+			err := service.SaveToDatabase()
+			if err != nil {
+				fmt.Println()
+				fmt.Println(err)
+				fmt.Println()
+				pressEnter()
+			} else {
+				fmt.Println()
+				fmt.Println("Data assessment berhasil disimpan ke database.")
+				fmt.Println()
+				pressEnter()
+			}
+		case 9:
 			fmt.Println()
 			println("Program selesai, semua data yang belum disimpan telah dihapus.")
 			fmt.Println()
@@ -47,13 +72,13 @@ func CliMode() {
 
 func handleAddAssessment() {
 	var (
-		answers   []model.Answer
-		err       error
-		isNewUser string
+		answers    []model.Answer
+		err        error
+		isNewUser  string
 		question   string
 		questionID string
-		name      string
-		userID    string
+		name       string
+		userID     string
 	)
 
 	clearConsole()
@@ -124,7 +149,7 @@ func handleAddAssessment() {
 		util.GetQuestion(10)
 		questionID = data.SelectedQuestions[i].QuestionID
 		question = data.SelectedQuestions[i].QuestionText
-		fmt.Printf("%d. %s", i + 1, question)
+		fmt.Printf("%d. %s", i+1, question)
 		fmt.Println()
 		for {
 			if i < 9 {
