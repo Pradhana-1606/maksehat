@@ -3,13 +3,13 @@ package model
 import "time"
 
 type Assessment struct {
-	AssessmentID string
-	Date         time.Time
-	UserID       string
-	UserName     string
-	Answers      []Answer
-	TotalScore   int
-	Category     string
+	AssessmentID string    `json:"assessmentId"`
+	Date         time.Time `json:"date"`
+	UserID       string    `json:"userId"`
+	UserName     string    `json:"userName"`
+	Answers      []Answer  `json:"answers"`
+	TotalScore   int       `json:"totalScore"`
+	Category     string    `json:"category"`
 }
 
 type Question struct {

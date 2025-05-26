@@ -42,13 +42,13 @@ func showMenu() {
 	fmt.Println("5. Cari Data Assessment")
 	fmt.Println("6. Urutkan Data Assessment")
 	fmt.Println("7. Laporan Ringkasan")
-	fmt.Println("8. Keluar")
+	fmt.Println("8. Simpan Data Assessment")
+	fmt.Println("9. Keluar")
 	fmt.Println()
 	fmt.Println("---------------------------------------------------------")
-	fmt.Print("Pilih menu [1-8]: ")
+	fmt.Print("Pilih menu [1-9]: ")
 }
 
-// fungsi untuk menampilkan header verifikasi data pengguna
 func showVerificationHeader() {
 	fmt.Println("================================================================")
 	fmt.Println("                    VERIFIKASI DATA PENGGUNA")
