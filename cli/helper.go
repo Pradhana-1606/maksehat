@@ -81,6 +81,12 @@ func showQuestionnaireHeader() {
 	fmt.Println("---------------------------------------------------------------------------")
 }
 
+func showResult() {
+	fmt.Println("=========================================================================")
+	fmt.Println("                    HASIL ASSESSMENT KESEHATAN MENTAL")
+	fmt.Println("=========================================================================")
+}
+
 func clearConsole(){
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {

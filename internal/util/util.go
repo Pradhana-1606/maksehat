@@ -160,28 +160,6 @@ func ResetSelectedQuestion() {
 	data.SelectedQuestions = []model.Question{}
 }
 
-func ScoreCalculation(answers []model.Answer) int {
-	totalScore := 0
-	for i := 0; i < len(answers); i++ {
-		totalScore += (6 - answers[i].Answer) * 2
-	}
-	return totalScore
-}
-
-func Categorization(score int) string {
-	if score >= 85 {
-		return "Stabil"
-	} else if score >= 70 && score <= 84 {
-		return "Cukup Stabil"
-	} else if score >= 55 && score <= 69 {
-		return "Tidak Stabil"
-	} else if score >= 40 && score <= 54 {
-		return "Depresi Ringan"
-	} else {
-		return "Depresi Berat"
-	}
-}
-
 func dataCount() int {
 	return len(data.Assessments)
 }

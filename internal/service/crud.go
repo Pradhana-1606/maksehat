@@ -17,11 +17,11 @@ func AddAssessment(name, userID string, answers []model.Answer) {
 		totalScore    int
 	)
 
-	totalScore = util.ScoreCalculation(answers)
+	totalScore = ScoreCalculation(answers)
 	date = util.GenerateDate()
 	assessmentID = util.GenerateAssessmentID(date, totalScore)
 	userName = util.ToUpperCase(name)
-	category = util.Categorization(totalScore)
+	category = Categorization(totalScore)
 
 	newAssessment = model.Assessment{
 		AssessmentID: assessmentID,
