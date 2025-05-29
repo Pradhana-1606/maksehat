@@ -28,15 +28,16 @@ func showWelcome() {
 }
 
 func showLoginHeader() {
-	fmt.Println("=============================================")
-	fmt.Println("                    MASUK")
-	fmt.Println("=============================================")
+	fmt.Println("========================================================")
+	fmt.Println("                         MASUK")
+	fmt.Println("========================================================")
 }
 
 func showRegisterHeader() {
-	fmt.Println("===================================================")
-	fmt.Println("                    PENDAFTARAN")
-	fmt.Println("===================================================")
+	fmt.Println("========================================================")
+	fmt.Println("                      PENDAFTARAN")
+	fmt.Println("========================================================")
+
 }
 
 func showMenu() {
@@ -90,9 +91,27 @@ func showResultHeader() {
 	fmt.Println("=========================================================================")
 }
 
+func showUpdateAssessmentHeader() {
+	fmt.Println("============================================================")
+	fmt.Println("                  PERBAIKI DATA ASSESSMENT")
+	fmt.Println("============================================================")
+	fmt.Println()
+	fmt.Println("Berikut data riwayat assessment yang pernah dikerjakan")
+	fmt.Println()
+}
+
 func showAllAssessmentHeader() {
 	fmt.Println("===========================================================")
 	fmt.Println("            RIWAYAT ASSESSMENT KESEHATAN MENTAL")
+	fmt.Println("===========================================================")
+	fmt.Println()
+	fmt.Println("Berikut data riwayat assessment yang pernah dikerjakan")
+	fmt.Println()
+}
+
+func showDeleteAssessmentHeader() {
+	fmt.Println("===========================================================")
+	fmt.Println("                   HAPUS DATA ASSESSMENT")
 	fmt.Println("===========================================================")
 	fmt.Println()
 	fmt.Println("Berikut data riwayat assessment yang pernah dikerjakan")

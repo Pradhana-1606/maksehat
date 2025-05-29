@@ -203,9 +203,9 @@ func mainMenu() {
 		case 1:
 			handleAddAssessment(user.UserID)
 		case 2:
-			// handleUpdateAssessment()
+			handleUpdateAssessment(user.UserID)
 		case 3:
-			// handleDeleteAssessment()
+			handleDeleteAssessment(user.UserID)
 		case 4:
 			handleHistoryAssessment(user.UserID)
 		case 5:
@@ -378,5 +378,245 @@ func handleHistoryAssessment(userID string) {
 		}
 	}
 	fmt.Println()
+	pressEnter()
+}
+
+func handleUpdateAssessment(userID string) {
+	var (
+		selectedAssessment string
+		target             *model.Assessment
+	)
+	clearConsole()
+	showUpdateAssessmentHeader()
+	assessments := data.Assessments
+
+	if auth.IsAdmin() {
+		if len(assessments) == 0 {
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		} else {
+			fmt.Println("==========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
+			fmt.Println("==========================================================================================================")
+			for i := 0; i < len(assessments); i++ {
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+					i+1,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].UserID,
+					assessments[i].Name,
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+			}
+			fmt.Println("==========================================================================================================")
+		}
+	} else {
+		fmt.Println("===========================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
+		fmt.Println("===========================================================")
+		found := false
+		count := 0
+		for i := 0; i < len(assessments); i++ {
+			if userID == assessments[i].UserID {
+				count += 1
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+					count,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+				found = true
+			}
+		}
+		fmt.Println("===========================================================")
+		if !found {
+			clearConsole()
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
+
+	fmt.Println()
+	for {
+		fmt.Print("Masukkan ID assessment yang ingin di ubah: ")
+		selectedAssessment = stringInput()
+		for i := 0; i < len(assessments); i++ {
+			if selectedAssessment == assessments[i].AssessmentID {
+				if auth.IsAdmin() || assessments[i].UserID == userID {
+					target = &assessments[i]
+					break
+				}
+			}
+		}
+		if target == nil {
+			fmt.Println()
+			fmt.Printf("Assessment dengan ID: %s tidak ditemukan.", selectedAssessment)
+			fmt.Println()
+			continue
+		}
+		break
+	}
+
+	fmt.Println()
+	fmt.Println("--- Pilih Bagian Yang Ingin Diubah ---")
+	fmt.Println()
+	fmt.Println("1. Tanggal Assessment")
+	fmt.Println("2. Batal")
+	fmt.Println()
+	for {
+		fmt.Print("Pilih [1-2]: ")
+		selectedOperation, err := intInput()
+		if err != nil {
+			fmt.Println()
+			fmt.Println("Error: Input", err)
+			fmt.Println()
+			continue
+		} else {
+			switch selectedOperation {
+			case 1:
+				fmt.Println()
+				var newDate time.Time
+				for {
+					fmt.Print("Masukkan tanggal baru dengan format DD-MM-YYYY: ")
+					newDate, err = time.Parse("02-01-2006", stringInput())
+					if err != nil {
+						fmt.Println("Error:", err)
+						fmt.Println("gunakan format DD-MM-YYYY tanpa spasi")
+						fmt.Println("contoh: 16-12-2024")
+						continue
+					}
+					break
+				}
+				target.Date = newDate
+				service.UpdateAssessment(target.AssessmentID, *target)
+				fmt.Println()
+				fmt.Println("Data berhasil diubah!")
+				fmt.Println()
+			case 2:
+				return
+			default:
+				fmt.Println()
+				fmt.Println("Pilihan tidak valid, coba lagi.")
+				fmt.Println()
+				continue
+			}
+		}
+		break
+	}
+	pressEnter()
+}
+
+func handleDeleteAssessment(userID string) {
+	var (
+		selectedAssessment string
+		target             *model.Assessment
+	)
+	clearConsole()
+	showDeleteAssessmentHeader()
+	assessments := data.Assessments
+
+	if auth.IsAdmin() {
+		if len(assessments) == 0 {
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		} else {
+			fmt.Println("==========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
+			fmt.Println("==========================================================================================================")
+			for i := 0; i < len(assessments); i++ {
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+					i+1,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].UserID,
+					assessments[i].Name,
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+			}
+			fmt.Println("==========================================================================================================")
+		}
+	} else {
+		fmt.Println("===========================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
+		fmt.Println("===========================================================")
+		found := false
+		count := 0
+		for i := 0; i < len(assessments); i++ {
+			if userID == assessments[i].UserID {
+				count += 1
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+					count,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+				found = true
+			}
+		}
+		fmt.Println("===========================================================")
+		if !found {
+			clearConsole()
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
+
+	fmt.Println()
+	for {
+		fmt.Print("Masukkan ID assessment yang ingin di ubah: ")
+		selectedAssessment = stringInput()
+		for i := 0; i < len(assessments); i++ {
+			if selectedAssessment == assessments[i].AssessmentID {
+				if auth.IsAdmin() || assessments[i].UserID == userID {
+					target = &assessments[i]
+					break
+				}
+			}
+		}
+		if target == nil {
+			fmt.Println()
+			fmt.Printf("Assessment dengan ID: %s tidak ditemukan.", selectedAssessment)
+			fmt.Println()
+			continue
+		}
+		break
+	}
+
+	fmt.Println()
+	for {
+		fmt.Print("Apakah Anda yakin akan menghapus data assessment tersebut? (y/n): ")
+		confirm := util.ToLowerCase(stringInput())
+		err := yesNoValidation(confirm)
+		if err != nil {
+			fmt.Println()
+			fmt.Println("Input", err)
+			fmt.Println()
+			continue
+		}
+		if confirm == "y" {
+			service.DeleteAssessment(target.AssessmentID)
+			fmt.Println()
+			fmt.Println("Assessment berhasil dihapus!")
+			fmt.Println()
+		} else {
+			fmt.Println()
+			fmt.Println("Dibatalkan!")
+			fmt.Println()
+		}
+		break
+	}
+
 	pressEnter()
 }

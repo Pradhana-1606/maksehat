@@ -35,3 +35,22 @@ func AddAssessment(userID string, answers []model.Answer) {
 
 	data.Assessments = append(data.Assessments, newAssessment)
 }
+
+func UpdateAssessment(assessmentID string, newValue model.Assessment) {
+	for i := 0; i < len(data.Assessments); i++ {
+		if data.Assessments[i].AssessmentID == assessmentID {
+			data.Assessments[i] = newValue
+		}
+	}
+}
+
+func DeleteAssessment(assessmentID string) {
+	newAssessments := []model.Assessment{}
+	for i := 0; i < len(data.Assessments); i++ {
+		if data.Assessments[i].AssessmentID == assessmentID {
+			continue
+		}
+		newAssessments = append(newAssessments, data.Assessments[i])
+	}
+	data.Assessments = newAssessments
+}
