@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"maksehat/data"
-	"maksehat/internal/util"
 	"os"
 	"os/exec"
 	"runtime"
@@ -13,25 +11,36 @@ import (
 	"strings"
 )
 
+func showWelcome() {
+	fmt.Println("========================================================")
+	fmt.Println("               SELAMAT DATANG DI makSehat")
+	fmt.Println("      Aplikasi Manajemen Kesehatan Mental Berbasis")
+	fmt.Println("                    Self Assessment")
+	fmt.Println("========================================================")
+	fmt.Println()
+	fmt.Println("1. Masuk Dengan Akun Yang Sudah Ada")
+	fmt.Println("2. Daftar Akun Baru")
+	fmt.Println("3. Keluar")
+	fmt.Println()
+	fmt.Println("--------------------------------------------------------")
+	fmt.Print("Pilih menu [1-3]: ")
+}
+
+func showLoginHeader() {
+	fmt.Println("=============================================")
+	fmt.Println("                    MASUK")
+	fmt.Println("=============================================")
+}
+
+func showRegisterHeader() {
+	fmt.Println("===================================================")
+	fmt.Println("                    PENDAFTARAN")
+	fmt.Println("===================================================")
+}
+
 func showMenu() {
-	for _, a := range data.Assessments{
-		fmt.Println(a.AssessmentID)
-		fmt.Println(a.Date.Format("02-01-2006"))
-		fmt.Println(a.UserID)
-		fmt.Println(a.UserName)
-		for _, q := range a.Answers {
-			fmt.Print(q.QuestionID, ", ")
-		}
-		fmt.Println()
-		for _, w := range a.Answers {
-			fmt.Print(w.Answer, ", ")
-		}
-		fmt.Println()
-		fmt.Println(a.TotalScore)
-		fmt.Println(a.Category)
-	}
 	fmt.Println("=========================================================")
-	fmt.Println("               SELAMAT DATANG di makSehat")            
+	fmt.Println("               SELAMAT DATANG di makSehat")
 	fmt.Println("  Aplikasi Manajemen Kesehatan Mental - Self Assessment")
 	fmt.Println("=========================================================")
 	fmt.Println()
@@ -43,19 +52,12 @@ func showMenu() {
 	fmt.Println("6. Urutkan Data Assessment")
 	fmt.Println("7. Laporan Ringkasan")
 	fmt.Println("8. Simpan Data Assessment")
-	fmt.Println("9. Keluar")
+	fmt.Println("9. Edit Akun")
+	fmt.Println("10. Keluar Dari Akun")
+	fmt.Println("11. Keluar Dari Aplikasi")
 	fmt.Println()
 	fmt.Println("---------------------------------------------------------")
-	fmt.Print("Pilih menu [1-9]: ")
-}
-
-func showVerificationHeader() {
-	fmt.Println("================================================================")
-	fmt.Println("                    VERIFIKASI DATA PENGGUNA")
-	fmt.Println("================================================================")
-	fmt.Println()
-	fmt.Println("Silakan verifikasi diri Anda sebelum mengisi kuesioner.")
-	fmt.Println()
+	fmt.Print("Pilih menu [1-11]: ")
 }
 
 func showQuestionnaireHeader() {
@@ -81,13 +83,13 @@ func showQuestionnaireHeader() {
 	fmt.Println("---------------------------------------------------------------------------")
 }
 
-func showResult() {
+func showResultHeader() {
 	fmt.Println("=========================================================================")
 	fmt.Println("                    HASIL ASSESSMENT KESEHATAN MENTAL")
 	fmt.Println("=========================================================================")
 }
 
-func clearConsole(){
+func clearConsole() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd", "/c", "cls")
@@ -109,20 +111,9 @@ func intInput() (int, error) {
 	source := stringInput()
 	input, err := strconv.Atoi(source)
 	if err != nil {
-		return 0, errors.New("harus angka")
+		return 0, errors.New("harus angka integer")
 	}
 	return input, nil
-}
-
-func yesNoValidation(input string) error {
-	isValid := util.StringInputValidation(input)
-	if isValid != nil {
-		return isValid
-	}
-	if input != "y"&& input != "n" {
-		return errors.New("input harus y/n")
-	}
-	return nil
 }
 
 func pressEnter() {

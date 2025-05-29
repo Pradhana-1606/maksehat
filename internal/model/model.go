@@ -6,7 +6,7 @@ type Assessment struct {
 	AssessmentID string    `json:"assessmentId"`
 	Date         time.Time `json:"date"`
 	UserID       string    `json:"userId"`
-	UserName     string    `json:"userName"`
+	Name         string    `json:"userName"`
 	Answers      []Answer  `json:"answers"`
 	TotalScore   int       `json:"totalScore"`
 	Category     string    `json:"category"`
@@ -20,4 +20,14 @@ type Question struct {
 type Answer struct {
 	QuestionID string
 	Answer     int
+}
+
+type User struct {
+	UserID      string
+	Name        string
+	Gender      string
+	DateOfBirth time.Time
+	Username    string
+	Password    string
+	IsAdmin     bool
 }

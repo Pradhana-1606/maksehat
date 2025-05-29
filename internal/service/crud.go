@@ -7,27 +7,27 @@ import (
 	"time"
 )
 
-func AddAssessment(name, userID string, answers []model.Answer) {
+func AddAssessment(userID string, answers []model.Answer) {
 	var (
 		assessmentID  string
 		category      string
 		date          time.Time
 		newAssessment model.Assessment
-		userName      string
+		name      string
 		totalScore    int
 	)
 
 	totalScore = ScoreCalculation(answers)
 	date = util.GenerateDate()
 	assessmentID = util.GenerateAssessmentID(date, totalScore)
-	userName = util.ToUpperCase(name)
+	name, _ = GetName(userID)
 	category = Categorization(totalScore)
 
 	newAssessment = model.Assessment{
 		AssessmentID: assessmentID,
 		Date:         date,
 		UserID:       userID,
-		UserName:     userName,
+		Name:         name,
 		Answers:      answers,
 		TotalScore:   totalScore,
 		Category:     category,

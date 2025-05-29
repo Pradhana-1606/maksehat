@@ -22,7 +22,7 @@ func ToUpperCase(text string) string {
 
 func StringInputValidation(input string) error {
 	if strings.TrimSpace(input) == "" {
-		return errors.New("input tidak boleh kosong")
+		return errors.New("tidak boleh kosong")
 	}
 	if input[0] == ' ' || input[len(input) - 1] == ' ' {
 		return errors.New("tidak boleh diawali atau diakhiri dengan spasi")
@@ -95,16 +95,41 @@ func GenerateAssessmentID(date time.Time, score int) string {
 	return id
 }
 
-func GenerateUserID() string {
-	year := GenerateDate().Year() % 100
-	count := rand.Intn(9999) + 1
-	id := fmt.Sprintf("%d0612%04d", year, count)
+func GenerateUserID(gender string) string {
+	year := rand.Intn(25 - 23 + 1) + 23
+
+	d6 := 0
+	if gender == "male" {
+		d6 = 1
+	} else {
+		d6 = 2
+	}
+
+	users, _ := data.LoadUserData()
+	maxCount := 0
+	newCount := 0
+	if dataCount() > 0 {
+		for i := 0; i < dataCount(); i++ {
+			savedYear, _ := strconv.Atoi(users[i].UserID[4:6])
+			if year == savedYear {
+				count, _ := strconv.Atoi(data.Assessments[i].AssessmentID[4:])
+				if count > maxCount {
+					maxCount = count
+				}
+			}
+		}
+		newCount = maxCount + 1
+	} else {
+		newCount = dataCount() + 1
+	}
+
+	id := fmt.Sprintf("USR%d%d%04d", year, d6, newCount)
 	return id
 }
 
 func GetUserID(name string) (string, error) {
 	for i := 0; i < dataCount(); i++ {
-		if name == data.Assessments[i].UserName {
+		if name == data.Assessments[i].Name {
 			return data.Assessments[i].UserID, nil
 		}
 	}

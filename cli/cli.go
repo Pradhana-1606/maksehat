@@ -3,13 +3,184 @@ package cli
 import (
 	"fmt"
 	"maksehat/data"
+	"maksehat/internal/auth"
 	"maksehat/internal/model"
 	"maksehat/internal/service"
 	"maksehat/internal/util"
+	"os"
+	"time"
 )
+
+// lanjut menghubungan fitur login ke main menu
 
 func CliMode() {
 	clearConsole()
+	err := data.IsDBExist("data/user.json")
+	if err != nil {
+		fmt.Println()
+		fmt.Println(err)
+		fmt.Println()
+		pressEnter()
+	}
+	err = service.IsAdminExist()
+	if err != nil {
+		fmt.Println()
+		fmt.Println(err)
+		fmt.Println()
+		pressEnter()
+	}
+	for {
+		clearConsole()
+		showWelcome()
+		choice, _ := intInput()
+		switch choice {
+		case 1:
+			handleLogin()
+		case 2:
+			handleRegister()
+		case 3:
+			fmt.Println()
+			println("Program selesai, semua data yang belum disimpan telah dihapus.")
+			fmt.Println()
+			return
+		default:
+			fmt.Println()
+			fmt.Println("Pilihan tidak valid, coba lagi.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
+}
+
+func handleLogin() {
+	clearConsole()
+	showLoginHeader()
+	fmt.Println()
+	fmt.Print("Username : ")
+	username := stringInput()
+	fmt.Print("Password : ")
+	password := stringInput()
+	fmt.Println()
+	user, err := auth.Login(username, password)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println()
+		pressEnter()
+	} else {
+		auth.SetActiveUser(user)
+		mainMenu()
+	}
+}
+
+func handleRegister() {
+	var (
+		name        string
+		gender      string
+		dateOfBirth time.Time
+		username    string
+		password    string
+		err         error
+	)
+	clearConsole()
+	showRegisterHeader()
+	fmt.Println()
+	for {
+		fmt.Print("Nama Lengkap  : ")
+		name = util.ToUpperCase(stringInput())
+		err := util.StringInputValidation(name)
+		if err != nil {
+			fmt.Println()
+			fmt.Println("Error: Nama", err)
+			fmt.Println()
+			continue
+		}
+		break
+	}
+
+	fmt.Println()
+	fmt.Println("1. Laki-laki")
+	fmt.Println("2. Perempuan")
+	fmt.Println()
+	for {
+		fmt.Print("Jenis Kelamin [1/2]: ")
+		choice, err := intInput()
+		if err != nil {
+			fmt.Println()
+			fmt.Println("Error:", err)
+			fmt.Println()
+			continue
+		}
+		if choice < 1 || choice > 2 {
+			fmt.Println()
+			fmt.Println("jenis kelamin hanya ada dua, pilih salah satu")
+			fmt.Println()
+			continue
+		}
+		if choice == 1 {
+			gender = "male"
+		} else {
+			gender = "female"
+		}
+		break
+	}
+
+	fmt.Println()
+	for {
+		fmt.Print("Tanggal Lahir DD-MM-YYYY: ")
+		date := stringInput()
+		dateOfBirth, err = time.Parse("02-01-2006", date)
+		if err != nil {
+			fmt.Println("Error:", err)
+			fmt.Println("gunakan format DD-MM-YYYY tanpa spasi")
+			fmt.Println("contoh: 06-06-2006")
+			continue
+		}
+		break
+	}
+
+	fmt.Println()
+	fmt.Println("---------------------------------------------------")
+	fmt.Println()
+	for {
+		for {
+			fmt.Print("Username : ")
+			username = stringInput()
+			err := auth.UsernameValidator(username)
+			if err != nil {
+				fmt.Println()
+				fmt.Println("Error:", err)
+				fmt.Println()
+				continue
+			}
+			break
+		}
+		for {
+			fmt.Print("Password : ")
+			password = stringInput()
+			err = auth.PasswordValidator(password)
+			if err != nil {
+				fmt.Println()
+				fmt.Println("Error:", err)
+				fmt.Println()
+				continue
+			}
+			break
+		}
+		fmt.Println()
+		err := auth.Register(name, gender, username, password, dateOfBirth)
+		if err != nil {
+			fmt.Println("Error: ", err)
+			continue
+		}
+		fmt.Println("Berhasil mendaftar!")
+		fmt.Println()
+		pressEnter()
+		break
+	}
+}
+
+func mainMenu() {
+	user := auth.GetActiveUser()
 	err := data.IsDBExist("data/assessment.json")
 	if err != nil {
 		fmt.Println()
@@ -30,7 +201,7 @@ func CliMode() {
 		choice, _ := intInput()
 		switch choice {
 		case 1:
-			handleAddAssessment()
+			handleAddAssessment(user.UserID)
 		case 2:
 			// handleUpdateAssessment()
 		case 3:
@@ -57,10 +228,15 @@ func CliMode() {
 				pressEnter()
 			}
 		case 9:
+			// editAccount()
+		case 10:
+			auth.Logout()
+			return
+		case 11:
 			fmt.Println()
 			println("Program selesai, semua data yang belum disimpan telah dihapus.")
 			fmt.Println()
-			return
+			os.Exit(0)
 		default:
 			fmt.Println()
 			fmt.Println("Pilihan tidak valid, coba lagi.")
@@ -70,77 +246,13 @@ func CliMode() {
 	}
 }
 
-func handleAddAssessment() {
+func handleAddAssessment(userID string) {
 	var (
 		answers    []model.Answer
-		err        error
-		isNewUser  string
 		question   string
 		questionID string
-		name       string
-		userID     string
 	)
 
-	clearConsole()
-	showVerificationHeader()
-
-	for {
-		fmt.Print("- Apakah Anda adalah pengguna baru? (y/n): ")
-		isNewUser = util.ToLowerCase(stringInput())
-		err := yesNoValidation(isNewUser)
-
-		if err != nil {
-			fmt.Println()
-			fmt.Println("  Error:", err)
-			fmt.Println()
-			continue
-		}
-
-		break
-	}
-
-	fmt.Println()
-
-	failCount := 0
-	for {
-		fmt.Print("- Masukkan nama lengkap Anda: ")
-		name = stringInput()
-		err = util.StringInputValidation(name)
-
-		if err != nil {
-			fmt.Println()
-			fmt.Println("  Error:", err)
-			fmt.Println()
-			continue
-		}
-
-		if isNewUser == "y" {
-			userID = util.GenerateUserID()
-		} else {
-			uname := util.ToUpperCase(name)
-			userID, err = util.GetUserID(uname)
-			if err != nil {
-				fmt.Println()
-				fmt.Println("  Error:", err)
-				fmt.Println()
-				failCount += 1
-				if failCount > 2 {
-					clearConsole()
-					fmt.Println()
-					fmt.Println("Yuh koh kelalen jenenge dewek wkwkwk")
-					fmt.Println()
-					pressEnter()
-					return
-				}
-				continue
-			}
-		}
-
-		break
-	}
-
-	fmt.Println()
-	pressEnter()
 	clearConsole()
 	showQuestionnaireHeader()
 	fmt.Println()
@@ -183,7 +295,7 @@ func handleAddAssessment() {
 		fmt.Println()
 	}
 
-	service.AddAssessment(name, userID, answers)
+	service.AddAssessment(userID, answers)
 
 	util.ResetSelectedQuestion()
 	fmt.Println("---------------------------------------------------------------------------")
@@ -191,8 +303,9 @@ func handleAddAssessment() {
 	fmt.Println("Jawaban berhasil disimpan!")
 	fmt.Println()
 	pressEnter()
+
 	clearConsole()
-	showResult()
+	showResultHeader()
 	fmt.Println()
 	fmt.Println("SKOR     : ", service.ScoreCalculation(answers))
 	fmt.Println("KATEGORI : ", service.Categorization(service.ScoreCalculation(answers)))
