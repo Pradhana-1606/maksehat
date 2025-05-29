@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"maksehat/internal/util"
 	"os"
 	"os/exec"
 	"runtime"
@@ -47,7 +48,7 @@ func showMenu() {
 	fmt.Println("1. Kerjakan Assessment")
 	fmt.Println("2. Perbaiki Data Assessment")
 	fmt.Println("3. Hapus Data Assessment")
-	fmt.Println("4. Tampilkan Data Assessment")
+	fmt.Println("4. Riwayat Assessment")
 	fmt.Println("5. Cari Data Assessment")
 	fmt.Println("6. Urutkan Data Assessment")
 	fmt.Println("7. Laporan Ringkasan")
@@ -89,6 +90,15 @@ func showResultHeader() {
 	fmt.Println("=========================================================================")
 }
 
+func showAllAssessmentHeader() {
+	fmt.Println("===========================================================")
+	fmt.Println("            RIWAYAT ASSESSMENT KESEHATAN MENTAL")
+	fmt.Println("===========================================================")
+	fmt.Println()
+	fmt.Println("Berikut data riwayat assessment yang pernah dikerjakan")
+	fmt.Println()
+}
+
 func clearConsole() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
@@ -114,6 +124,17 @@ func intInput() (int, error) {
 		return 0, errors.New("harus angka integer")
 	}
 	return input, nil
+}
+
+func yesNoValidation(input string) error {
+	isValid := util.StringInputValidation(input)
+	if isValid != nil {
+		return isValid
+	}
+	if input != "y" && input != "n" {
+		return errors.New("harus y/n")
+	}
+	return nil
 }
 
 func pressEnter() {

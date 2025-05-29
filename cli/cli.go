@@ -207,7 +207,7 @@ func mainMenu() {
 		case 3:
 			// handleDeleteAssessment()
 		case 4:
-			// handleShowAllAssessment()
+			handleHistoryAssessment(user.UserID)
 		case 5:
 			// handleSearchAssessment()
 		case 6:
@@ -317,6 +317,66 @@ func handleAddAssessment(userID string) {
 	fmt.Println(service.Recommendation(service.ScoreCalculation(answers)))
 	fmt.Println()
 	fmt.Println("-------------------------------------------------------------------------")
+	fmt.Println()
+	pressEnter()
+}
+
+func handleHistoryAssessment(userID string) {
+	clearConsole()
+	showAllAssessmentHeader()
+	assessments := data.Assessments
+
+	if auth.IsAdmin() {
+		if len(assessments) == 0 {
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		} else {
+			fmt.Println("==========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
+			fmt.Println("==========================================================================================================")
+			for i := 0; i < len(assessments); i++ {
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+					i+1,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].UserID,
+					assessments[i].Name,
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+			}
+			fmt.Println("==========================================================================================================")
+		}
+	} else {
+		fmt.Println("===========================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
+		fmt.Println("===========================================================")
+		found := false
+		count := 0
+		for i := 0; i < len(assessments); i++ {
+			if userID == assessments[i].UserID {
+				count += 1
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+					count,
+					assessments[i].AssessmentID,
+					assessments[i].Date.Format("02-01-2006"),
+					assessments[i].TotalScore,
+					assessments[i].Category,
+				)
+				fmt.Println()
+				found = true
+			}
+		}
+		fmt.Println("===========================================================")
+		if !found {
+			clearConsole()
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
 	fmt.Println()
 	pressEnter()
 }
