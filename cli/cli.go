@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-// lanjut menghubungan fitur login ke main menu
-
 func CliMode() {
 	clearConsole()
 	err := data.IsDBExist("data/user.json")
@@ -218,7 +216,7 @@ func mainMenu() {
 				pressEnter()
 			}
 		case 6:
-			// handleSortAssessment()
+			handleSortAssessment(user.UserID)
 		case 7:
 			// handleShowReport()
 		case 8:
@@ -633,7 +631,7 @@ func handleSearchAssessment() {
 		choice  int
 		err     error
 		results []model.Assessment
-		userID string
+		userID  string
 	)
 	clearConsole()
 	showSearchHeader()
@@ -707,6 +705,86 @@ func handleSearchAssessment() {
 		fmt.Println()
 	}
 	fmt.Println("==========================================================================================================")
+
+	fmt.Println()
+	pressEnter()
+}
+
+func handleSortAssessment(userID string) {
+	var sorted []model.Assessment
+	clearConsole()
+	showSortHeader()
+	fmt.Print("Pilih Metode Pengurutan [1-3]: ")
+	choice, err := intInput()
+	if err != nil {
+		fmt.Println("Error: Input", err)
+	}
+	switch choice {
+	case 1:
+		sorted = service.SelectionSort(userID)
+	case 2:
+		sorted = service.InsertionSort(userID)
+	case 3:
+		return
+	default:
+		fmt.Println()
+		fmt.Println("Pilihan tidak valid, coba lagi.")
+		fmt.Println()
+		pressEnter()
+	}
+
+	fmt.Println()
+	if auth.IsAdmin() {
+		if len(sorted) == 0 {
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		} else {
+			fmt.Println("==========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
+			fmt.Println("==========================================================================================================")
+			for i := 0; i < len(sorted); i++ {
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+					i+1,
+					sorted[i].AssessmentID,
+					sorted[i].Date.Format("02-01-2006"),
+					sorted[i].UserID,
+					sorted[i].Name,
+					sorted[i].TotalScore,
+					sorted[i].Category,
+				)
+				fmt.Println()
+			}
+			fmt.Println("==========================================================================================================")
+		}
+	} else {
+		fmt.Println("===========================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
+		fmt.Println("===========================================================")
+		found := false
+		count := 0
+		for i := 0; i < len(sorted); i++ {
+			if userID == sorted[i].UserID {
+				count += 1
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+					count,
+					sorted[i].AssessmentID,
+					sorted[i].Date.Format("02-01-2006"),
+					sorted[i].TotalScore,
+					sorted[i].Category,
+				)
+				fmt.Println()
+				found = true
+			}
+		}
+		fmt.Println("===========================================================")
+		if !found {
+			clearConsole()
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
 
 	fmt.Println()
 	pressEnter()
