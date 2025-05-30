@@ -118,6 +118,13 @@ func showDeleteAssessmentHeader() {
 	fmt.Println()
 }
 
+func showSearchHeader() {
+	fmt.Println("===========================================================")
+	fmt.Println("                   CARI DATA ASSESSMENT")
+	fmt.Println("===========================================================")
+	fmt.Println()
+}
+
 func clearConsole() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {

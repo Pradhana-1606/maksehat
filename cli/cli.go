@@ -209,7 +209,14 @@ func mainMenu() {
 		case 4:
 			handleHistoryAssessment(user.UserID)
 		case 5:
-			// handleSearchAssessment()
+			if auth.IsAdmin() {
+				handleSearchAssessment()
+			} else {
+				fmt.Println()
+				fmt.Println("Fitur ini belum tersedia.")
+				fmt.Println()
+				pressEnter()
+			}
 		case 6:
 			// handleSortAssessment()
 		case 7:
@@ -618,5 +625,89 @@ func handleDeleteAssessment(userID string) {
 		break
 	}
 
+	pressEnter()
+}
+
+func handleSearchAssessment() {
+	var (
+		choice  int
+		err     error
+		results []model.Assessment
+		userID string
+	)
+	clearConsole()
+	showSearchHeader()
+
+	found := false
+	for {
+		fmt.Print("Masukkan ID pengguna yang ingin dicari: ")
+		userID = stringInput()
+		for i := 0; i < len(data.Assessments); i++ {
+			if userID == data.Assessments[i].UserID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			fmt.Println()
+			fmt.Println("Pengguna tidak ditemukan.")
+			fmt.Println()
+			continue
+		}
+		break
+	}
+
+	fmt.Println()
+	fmt.Println("1. Sequential Search")
+	fmt.Println("2. Binary Search")
+	fmt.Println("3. Batal")
+	fmt.Println()
+	for {
+		fmt.Print("Pilih metode pencarian [1-3]: ")
+		choice, err = intInput()
+		if err != nil {
+			fmt.Println()
+			fmt.Println("Error: Input ", err)
+			fmt.Println()
+			continue
+		} else {
+			if choice == 1 {
+				results = service.SequentialSearch(userID)
+			} else if choice == 2 {
+				results = service.BinarySearch(userID)
+			}
+		}
+		break
+	}
+
+	if len(results) == 0 {
+		fmt.Println()
+		fmt.Println("Data tidak ditemukan.")
+		fmt.Println()
+		pressEnter()
+	}
+
+	fmt.Println()
+	fmt.Println("Berikut data assessment yang ditemukan:")
+	fmt.Println()
+
+	fmt.Println("==========================================================================================================")
+	fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
+	fmt.Println("==========================================================================================================")
+	for i := 0; i < len(results); i++ {
+		fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+			i+1,
+			results[i].AssessmentID,
+			results[i].Date.Format("02-01-2006"),
+			results[i].UserID,
+			results[i].Name,
+			results[i].TotalScore,
+			results[i].Category,
+		)
+		fmt.Println()
+	}
+	fmt.Println("==========================================================================================================")
+
+	fmt.Println()
 	pressEnter()
 }
