@@ -136,6 +136,13 @@ func showSortHeader() {
 	fmt.Println()
 }
 
+func showReportHeader() {
+	fmt.Println("===========================================================")
+	fmt.Println("                     LAPORAN RINGKASAN")
+	fmt.Println("===========================================================")
+	fmt.Println()
+}
+
 func clearConsole() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {

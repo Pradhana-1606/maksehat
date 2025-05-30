@@ -218,7 +218,7 @@ func mainMenu() {
 		case 6:
 			handleSortAssessment(user.UserID)
 		case 7:
-			// handleShowReport()
+			handleShowReport(user.UserID)
 		case 8:
 			err := service.SaveToDatabase()
 			if err != nil {
@@ -233,6 +233,10 @@ func mainMenu() {
 				pressEnter()
 			}
 		case 9:
+			fmt.Println()
+			fmt.Println("Fitur belum tersedia.")
+			fmt.Println()
+			pressEnter()
 			// editAccount()
 		case 10:
 			auth.Logout()
@@ -337,11 +341,11 @@ func handleHistoryAssessment(userID string) {
 			fmt.Println()
 			pressEnter()
 		} else {
-			fmt.Println("==========================================================================================================")
-			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+			fmt.Println("===========================================================================================================")
 			for i := 0; i < len(assessments); i++ {
-				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
 					i+1,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -352,18 +356,18 @@ func handleHistoryAssessment(userID string) {
 				)
 				fmt.Println()
 			}
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
 		}
 	} else {
-		fmt.Println("===========================================================")
-		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI       |")
+		fmt.Println("============================================================")
 		found := false
 		count := 0
 		for i := 0; i < len(assessments); i++ {
 			if userID == assessments[i].UserID {
 				count += 1
-				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-14s |",
 					count,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -374,7 +378,7 @@ func handleHistoryAssessment(userID string) {
 				found = true
 			}
 		}
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
 		if !found {
 			clearConsole()
 			fmt.Println("Belum ada data assessment.")
@@ -401,11 +405,11 @@ func handleUpdateAssessment(userID string) {
 			fmt.Println()
 			pressEnter()
 		} else {
-			fmt.Println("==========================================================================================================")
-			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+			fmt.Println("===========================================================================================================")
 			for i := 0; i < len(assessments); i++ {
-				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
 					i+1,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -416,18 +420,18 @@ func handleUpdateAssessment(userID string) {
 				)
 				fmt.Println()
 			}
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
 		}
 	} else {
-		fmt.Println("===========================================================")
-		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI       |")
+		fmt.Println("============================================================")
 		found := false
 		count := 0
 		for i := 0; i < len(assessments); i++ {
 			if userID == assessments[i].UserID {
 				count += 1
-				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-14s |",
 					count,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -438,7 +442,7 @@ func handleUpdateAssessment(userID string) {
 				found = true
 			}
 		}
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
 		if !found {
 			clearConsole()
 			fmt.Println("Belum ada data assessment.")
@@ -532,11 +536,11 @@ func handleDeleteAssessment(userID string) {
 			fmt.Println()
 			pressEnter()
 		} else {
-			fmt.Println("==========================================================================================================")
-			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+			fmt.Println("===========================================================================================================")
 			for i := 0; i < len(assessments); i++ {
-				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
 					i+1,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -547,18 +551,18 @@ func handleDeleteAssessment(userID string) {
 				)
 				fmt.Println()
 			}
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
 		}
 	} else {
-		fmt.Println("===========================================================")
-		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI       |")
+		fmt.Println("============================================================")
 		found := false
 		count := 0
 		for i := 0; i < len(assessments); i++ {
 			if userID == assessments[i].UserID {
 				count += 1
-				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-14s |",
 					count,
 					assessments[i].AssessmentID,
 					assessments[i].Date.Format("02-01-2006"),
@@ -569,7 +573,7 @@ func handleDeleteAssessment(userID string) {
 				found = true
 			}
 		}
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
 		if !found {
 			clearConsole()
 			fmt.Println("Belum ada data assessment.")
@@ -580,7 +584,7 @@ func handleDeleteAssessment(userID string) {
 
 	fmt.Println()
 	for {
-		fmt.Print("Masukkan ID assessment yang ingin di ubah: ")
+		fmt.Print("Masukkan ID assessment yang ingin di hapus: ")
 		selectedAssessment = stringInput()
 		for i := 0; i < len(assessments); i++ {
 			if selectedAssessment == assessments[i].AssessmentID {
@@ -689,11 +693,11 @@ func handleSearchAssessment() {
 	fmt.Println("Berikut data assessment yang ditemukan:")
 	fmt.Println()
 
-	fmt.Println("==========================================================================================================")
-	fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
-	fmt.Println("==========================================================================================================")
+	fmt.Println("===========================================================================================================")
+	fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+	fmt.Println("===========================================================================================================")
 	for i := 0; i < len(results); i++ {
-		fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+		fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
 			i+1,
 			results[i].AssessmentID,
 			results[i].Date.Format("02-01-2006"),
@@ -704,7 +708,7 @@ func handleSearchAssessment() {
 		)
 		fmt.Println()
 	}
-	fmt.Println("==========================================================================================================")
+	fmt.Println("===========================================================================================================")
 
 	fmt.Println()
 	pressEnter()
@@ -740,11 +744,11 @@ func handleSortAssessment(userID string) {
 			fmt.Println()
 			pressEnter()
 		} else {
-			fmt.Println("==========================================================================================================")
-			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI      |")
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+			fmt.Println("===========================================================================================================")
 			for i := 0; i < len(sorted); i++ {
-				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
 					i+1,
 					sorted[i].AssessmentID,
 					sorted[i].Date.Format("02-01-2006"),
@@ -755,18 +759,18 @@ func handleSortAssessment(userID string) {
 				)
 				fmt.Println()
 			}
-			fmt.Println("==========================================================================================================")
+			fmt.Println("===========================================================================================================")
 		}
 	} else {
-		fmt.Println("===========================================================")
-		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI      |")
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI       |")
+		fmt.Println("============================================================")
 		found := false
 		count := 0
 		for i := 0; i < len(sorted); i++ {
 			if userID == sorted[i].UserID {
 				count += 1
-				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-13s |",
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-14s |",
 					count,
 					sorted[i].AssessmentID,
 					sorted[i].Date.Format("02-01-2006"),
@@ -777,7 +781,7 @@ func handleSortAssessment(userID string) {
 				found = true
 			}
 		}
-		fmt.Println("===========================================================")
+		fmt.Println("============================================================")
 		if !found {
 			clearConsole()
 			fmt.Println("Belum ada data assessment.")
@@ -785,7 +789,86 @@ func handleSortAssessment(userID string) {
 			pressEnter()
 		}
 	}
+	fmt.Println()
+	pressEnter()
+}
 
+func handleShowReport(userID string) {
+	var userAssessments []model.Assessment
+	var averageScore float64
+	clearConsole()
+	showReportHeader()
+
+	for i := 0; i < len(data.Assessments); i++ {
+		if userID == data.Assessments[i].UserID {
+			userAssessments = append(userAssessments, data.Assessments[i])
+		}
+	}
+
+	fmt.Println("5 Hasil Assessment Terakhir")
+
+	fmt.Println()
+	if auth.IsAdmin() {
+		lastFive := service.GetLastFive(data.Assessments)
+		if len(lastFive) == 0 {
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		} else {
+			fmt.Println("===========================================================================================================")
+			fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | ID PENGGUNA | NAMA PENGGUNA                  | SKOR | KATEGORI       |")
+			fmt.Println("===========================================================================================================")
+			for i := 0; i < len(lastFive); i++ {
+				fmt.Printf("| %3d | %10s    | %10s | %10s  | %-30s |  %3d | %-14s |",
+					i+1,
+					lastFive[i].AssessmentID,
+					lastFive[i].Date.Format("02-01-2006"),
+					lastFive[i].UserID,
+					lastFive[i].Name,
+					lastFive[i].TotalScore,
+					lastFive[i].Category,
+				)
+				fmt.Println()
+			}
+			fmt.Println("===========================================================================================================")
+		}
+	} else {
+		lastFive := service.GetLastFive(userAssessments)
+		fmt.Println("============================================================")
+		fmt.Println("| No. | ID ASSESSMENT | TANGGAL    | SKOR | KATEGORI       |")
+		fmt.Println("============================================================")
+		found := false
+		count := 0
+		for i := 0; i < len(lastFive); i++ {
+			if userID == lastFive[i].UserID {
+				count += 1
+				fmt.Printf("| %3d | %10s    | %10s |  %3d | %-14s |",
+					count,
+					lastFive[i].AssessmentID,
+					lastFive[i].Date.Format("02-01-2006"),
+					lastFive[i].TotalScore,
+					lastFive[i].Category,
+				)
+				fmt.Println()
+				found = true
+			}
+		}
+		fmt.Println("============================================================")
+		if !found {
+			clearConsole()
+			fmt.Println("Belum ada data assessment.")
+			fmt.Println()
+			pressEnter()
+		}
+	}
+	fmt.Println()
+	fmt.Print("Rata-rata skor dalam sebulan terakhir : ")
+	if auth.IsAdmin() {
+		averageScore = service.GetAverageScore(data.Assessments)
+	} else {
+		averageScore = service.GetAverageScore(userAssessments)
+	}
+	fmt.Printf("%.2f\n", averageScore)
 	fmt.Println()
 	pressEnter()
 }
