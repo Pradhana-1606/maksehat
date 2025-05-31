@@ -13,7 +13,7 @@ func main(){
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	if len(os.Args) < 2 {
-		fmt.Println("Contoh Penggunaan: go run main.go . [cli/gui]")
+		fmt.Println("Contoh Penggunaan: go run . [cli/gui]")
 		return
 	}
 
@@ -26,6 +26,6 @@ func main(){
 		gui.GuiMode()
 	default:
 		fmt.Println("Perintah tidak dikenali:", mode)
-		fmt.Println("Contoh Penggunaan: go run main.go . cli (untuk masuk ke mode CLI)")
+		fmt.Println("Contoh Penggunaan: go run . cli (untuk masuk ke mode CLI)")
 	}
 }
